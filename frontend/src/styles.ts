@@ -41,6 +41,5 @@ export const arrowStyleGallery = {
 };
 
 export const someStyle = {
-  boxShadow:
-    '0px 2px 1px -1px rgba(3, 201, 136, 0.7), 0px 1px 1px 0px rgba(3, 201, 136, 0.7), 0px 1px 3px 0px rgba(3, 201, 136, 0.7)',
+  boxShadow: '0px 5px 10px 2px rgba(180, 24, 24, 0.2);',
 };

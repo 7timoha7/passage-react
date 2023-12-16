@@ -3,10 +3,9 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
-  token?: string;
   role: string;
   phoneNumber: string;
-  cashback: number;
+  token?: string;
   favorites: string[];
   isVerified: boolean;
 }

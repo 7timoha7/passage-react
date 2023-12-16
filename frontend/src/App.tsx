@@ -6,6 +6,7 @@ import Home from './containers/Home';
 import MainPage from './containers/MainPage';
 import Login from './features/users/Login';
 import Register from './features/users/Register';
+import './App.css';
 
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';

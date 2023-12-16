@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectCategory, selectFetchOneCategoriesLoading } from '../MenuCategories/menuCategoriesSlice';
 import { fetchOneCategories } from '../MenuCategories/menuCategoriesThunks';
 import Spinner from '../../components/UI/Spinner/Spinner';
-import Products from './Products';
+import Products from './components/Products';
 import React from 'react';
 
 const ProductsPage = () => {

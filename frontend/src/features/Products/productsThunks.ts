@@ -17,3 +17,12 @@ export const productsFromApi = createAsyncThunk('products/fetchFromApi', async (
   console.log(products.data);
   return products.data;
 });
+
+export const getFavoriteProducts = createAsyncThunk<ProductType[]>('products/getFavoriteProducts', async () => {
+  try {
+    const responseFavoriteProducts = await axiosApi.get<ProductType[]>('/products/get/favorites');
+    return responseFavoriteProducts.data;
+  } catch {
+    throw new Error();
+  }
+});

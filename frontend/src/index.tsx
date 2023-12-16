@@ -26,7 +26,6 @@ root.render(
               <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
                 <App />
               </GoogleOAuthProvider>
-              ,
             </SnackbarProvider>
           </ThemeProvider>
         </Suspense>

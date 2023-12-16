@@ -65,19 +65,6 @@ export const getUsers = createAsyncThunk<User[], string>('users/getMatched', asy
   }
 });
 
-interface statusProps {
-  id: string;
-  status: string;
-}
-
-export const changeStatus = createAsyncThunk<void, statusProps>('users/changeStatus', async ({ status, id }) => {
-  try {
-    await axiosApi.patch('/users/status/' + id, { status });
-  } catch {
-    throw new Error();
-  }
-});
-
 interface roleProps {
   id: string;
   role: string;
@@ -163,6 +150,21 @@ export const changePass = createAsyncThunk<GlobalSuccess, string>('users/changeP
 export const restorePassword = createAsyncThunk<GlobalSuccess, string>('users/restorePassword', async (email) => {
   try {
     const response = await axiosApi.post('/users/restorePassword', { email: email });
+    return response.data;
+  } catch {
+    throw new Error();
+  }
+});
+
+interface changeProps {
+  addProduct?: string;
+  deleteProduct?: string;
+}
+
+export const changeFavorites = createAsyncThunk<GlobalSuccess, changeProps>('users/changeFavorites', async (data) => {
+  try {
+    const payload = data.addProduct ? { addProduct: data.addProduct } : { deleteProduct: data.deleteProduct };
+    const response = await axiosApi.patch('/users/toggleAddProductToFavorites', payload);
     return response.data;
   } catch {
     throw new Error();

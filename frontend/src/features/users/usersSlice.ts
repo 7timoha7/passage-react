@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { GlobalError, GlobalSuccess, User, ValidationError } from '../../types';
 import {
+  changeFavorites,
   changePass,
   getByRole,
   getUsers,
@@ -151,6 +152,9 @@ export const usersSlice = createSlice({
     builder.addCase(googlePhoneNumber.fulfilled, (state, { payload: user }) => {
       state.user = user.user;
       state.Success = user.message;
+    });
+    builder.addCase(changeFavorites.fulfilled, (state, { payload: success }) => {
+      state.Success = success;
     });
   },
 });

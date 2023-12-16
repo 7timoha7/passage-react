@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Paper, Typography, Tooltip, Button, Grid } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import noImage from '../../assets/images/no_image.jpg';
-import { ProductBasketType, ProductType } from '../../types';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectProductBasket, setProductBasket } from './productsSlise';
-import { apiURL } from '../../constants';
+import noImage from '../../../assets/images/no_image.jpg';
+import { ProductBasketType, ProductType } from '../../../types';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { selectProductBasket, setProductBasket } from '../productsSlise';
+import { apiURL } from '../../../constants';
 
 interface Props {
   product: ProductType;

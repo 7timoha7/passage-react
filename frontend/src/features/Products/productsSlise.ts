@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ProductType } from '../../types';
 import { RootState } from '../../app/store';
-import { productFetch, productsFetch, productsFromApi } from './productsThunks';
+import { getFavoriteProducts, productFetch, productsFetch, productsFromApi } from './productsThunks';
 
 interface ProductsState {
   products: ProductType[];
@@ -11,6 +11,8 @@ interface ProductsState {
   productLoading: boolean;
   productBasket: boolean;
   error: boolean;
+  favoriteProducts: ProductType[];
+  fetchFavoriteProductsLoading: boolean;
 }
 
 const initialState: ProductsState = {
@@ -21,6 +23,8 @@ const initialState: ProductsState = {
   productLoading: false,
   productBasket: false,
   error: false,
+  favoriteProducts: [],
+  fetchFavoriteProductsLoading: false,
 };
 
 export const productsSLice = createSlice({
@@ -67,6 +71,17 @@ export const productsSLice = createSlice({
       state.productsLoading = false;
       state.error = true;
     });
+    builder.addCase(getFavoriteProducts.pending, (state) => {
+      state.favoriteProducts = [];
+      state.fetchFavoriteProductsLoading = true;
+    });
+    builder.addCase(getFavoriteProducts.fulfilled, (state, { payload: favoriteProducts }) => {
+      state.fetchFavoriteProductsLoading = false;
+      state.favoriteProducts = favoriteProducts;
+    });
+    builder.addCase(getFavoriteProducts.rejected, (state) => {
+      state.fetchFavoriteProductsLoading = false;
+    });
   },
 });
 
@@ -78,6 +93,7 @@ export const selectProductsState = (state: RootState) => state.products.products
 export const selectProductOne = (state: RootState) => state.products.product;
 export const selectProductBasket = (state: RootState) => state.products.productBasket;
 export const selectProductsFromApi = (state: RootState) => state.products.productsFromApi;
-
 export const selectProductsLoading = (state: RootState) => state.products.productsLoading;
 export const selectProductLoading = (state: RootState) => state.products.productLoading;
+export const selectFavoriteProducts = (state: RootState) => state.products.favoriteProducts;
+export const selectFetchFavoriteProductsLoading = (state: RootState) => state.products.fetchFavoriteProductsLoading;
