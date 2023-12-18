@@ -7,6 +7,7 @@ import { OAuth2Client } from 'google-auth-library';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import config from '../config';
+import Product from '../models/Product';
 
 const usersRouter = express.Router();
 
@@ -150,44 +151,96 @@ usersRouter.patch('/status/:id', auth, permit('director', 'admin'), async (req, 
 //   }
 // });
 //
-// usersRouter.patch('/toggleAddHotelToFavorites', auth, permit('user'), async (req, res, next) => {
+usersRouter.patch('/toggleAddProductToFavorites', auth, permit('user'), async (req, res, next) => {
+  const user = (req as RequestWithUser).user;
+  const addProductId = req.body.addProduct;
+  const deleteProductId = req.body.deleteProduct;
+
+  try {
+    if (addProductId) {
+      const foundProduct = await Product.findById(addProductId);
+      if (!foundProduct) {
+        return res.send({ error: 'Product is not found' });
+      }
+
+      if (user.favorites.includes(addProductId)) {
+        return res.send({ message: 'The product is already in the favorites' });
+      } else {
+        user.favorites.push(addProductId);
+        await user.save();
+        return res.send({
+          message: {
+            en: foundProduct.name + ' added to favorites successfully',
+            ru: foundProduct.name + ' успешно добавлен в избраное',
+          },
+        });
+      }
+    }
+    if (deleteProductId) {
+      const foundProduct = await Product.findById(deleteProductId);
+      if (!foundProduct) {
+        return res.send({ error: 'Product is not found' });
+      }
+      if (!user.favorites.includes(deleteProductId)) {
+        return res.send({ message: 'You dont have this product in the favorites' });
+      }
+      user.favorites = user.favorites.filter((favProduct) => favProduct.toString() !== deleteProductId);
+      await user.save();
+      return res.send({
+        message: {
+          en: foundProduct.name + ' removed from favorites successfully',
+          ru: foundProduct.name + ' успешно уделён из избраное',
+        },
+      });
+    }
+  } catch (e) {
+    return next(e);
+  }
+});
+
+// usersRouter.patch('/toggleAddProductToFavorites', auth, permit('user'), async (req, res, next) => {
 //   const user = (req as RequestWithUser).user;
-//   const addHotelId = req.body.addHotel;
-//   const deleteHotelId = req.body.deleteHotel;
+//   const addProductId = req.body.addProduct;
+//   const deleteProductId = req.body.deleteProduct;
+//   console.log(req.body);
+//
 //   try {
-//     if (addHotelId) {
-//       const foundHotel = await Hotel.findById(addHotelId);
-//       if (!foundHotel) {
-//         return res.send({ error: 'Hotel is not found' });
+//     if (addProductId) {
+//       const foundProduct = await Product.findById(addProductId);
+//       if (!foundProduct) {
+//         return res.status(404).json({ error: 'Product is not found' });
 //       }
 //
-//       if (user.favorites.includes(addHotelId)) {
-//         return res.send({ message: 'The hotel is already in the favorites' });
+//       if (user.favorites.includes(addProductId)) {
+//         return res.status(400).json({ message: 'The product is already in the favorites' });
 //       } else {
-//         user.favorites.push(addHotelId);
+//         user.favorites.push(addProductId);
 //         await user.save();
-//         return res.send({
+//         return res.status(200).json({
 //           message: {
-//             en: foundHotel.name + ' added to favorites successfully',
-//             ru: foundHotel.name + ' успешно добавлен в избраное',
+//             en: foundProduct.name + ' added to favorites successfully',
+//             ru: foundProduct.name + ' успешно добавлен в избранное',
 //           },
 //         });
 //       }
 //     }
-//     if (deleteHotelId) {
-//       const foundHotel = await Hotel.findById(deleteHotelId);
-//       if (!foundHotel) {
-//         return res.send({ error: 'Hotel is not found' });
+//
+//     if (deleteProductId) {
+//       const foundProduct = await Product.findById(deleteProductId);
+//       if (!foundProduct) {
+//         return res.status(404).json({ error: 'Product is not found' });
 //       }
-//       if (!user.favorites.includes(deleteHotelId)) {
-//         return res.send({ message: 'You dont have this hotel in the favorites' });
+//
+//       if (!user.favorites.includes(deleteProductId)) {
+//         return res.status(400).json({ message: 'You dont have this product in the favorites' });
 //       }
-//       user.favorites = user.favorites.filter((favHotel) => favHotel.toString() !== deleteHotelId);
+//
+//       user.favorites = user.favorites.filter((favProduct) => favProduct.toString() !== deleteProductId);
 //       await user.save();
-//       return res.send({
+//       return res.status(200).json({
 //         message: {
-//           en: foundHotel.name + ' removed from favorites successfully',
-//           ru: foundHotel.name + ' успешно уделён из избраное',
+//           en: foundProduct.name + ' removed from favorites successfully',
+//           ru: foundProduct.name + ' успешно уделён из избранного',
 //         },
 //       });
 //     }
@@ -296,7 +349,7 @@ usersRouter.post('/getVerify', auth, async (req, res, next) => {
       secure: false,
       auth: {
         user: config.mail,
-        pass: 'vodjjdkhhdgcvenq',
+        pass: 'jczr vpof kqyp qrtj',
       },
     });
     const mailOptions = {
@@ -389,7 +442,7 @@ usersRouter.post('/restorePassword', async (req, res, next) => {
       secure: false,
       auth: {
         user: config.mail,
-        pass: 'vodjjdkhhdgcvenq',
+        pass: 'jczr vpof kqyp qrtj',
       },
     });
     const mailOptions = {

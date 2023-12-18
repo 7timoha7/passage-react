@@ -72,25 +72,13 @@ const ProductCard: React.FC<Props> = ({ product }) => {
 
   return (
     <Box>
-      {user &&
-        user.isVerified &&
-        (user.role === 'user' && favorite ? (
-          <Box onClick={() => onClickFavorite(product._id)} textAlign="right">
-            <FavoriteIcon color="error" />
-          </Box>
-        ) : (
-          user.role === 'user' && (
-            <Box onClick={() => onClickFavorite(product._id)} textAlign="right">
-              <FavoriteBorderIcon />
-            </Box>
-          )
-        ))}
       <Card
         onClick={() => navigate('/product/' + product._id)}
         sx={{
           width: 345,
           display: 'flex',
           flexDirection: 'column',
+          position: 'relative', // Добавлен стиль, чтобы позволить позиционирование иконки "Добавить в избранное"
           transition: 'box-shadow 0.3s',
           '&:hover': {
             boxShadow: isAddedToCart ? 'none' : '0px 0px 10px 2px rgba(255,0,0,0.75)',
@@ -98,6 +86,24 @@ const ProductCard: React.FC<Props> = ({ product }) => {
         }}
       >
         <CardMedia component="img" height="194" image={imgProduct} alt="Product" />
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            cursor: 'pointer',
+            padding: '8px', // Подберите подходящий вам отступ
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onClickFavorite(product._id);
+          }}
+        >
+          {user &&
+            user.isVerified &&
+            user.role === 'user' &&
+            (favorite ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />)}
+        </Box>
         <CardContent
           sx={{
             flexGrow: 1,

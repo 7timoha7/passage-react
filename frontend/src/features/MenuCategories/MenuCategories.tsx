@@ -4,41 +4,34 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-
-import Button from '@mui/material/Button';
-import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectCategories } from './menuCategoriesSlice';
 import { fetchCategories } from './menuCategoriesThunks';
+import AccordionCategories from './AccordionCategories';
+import { Typography } from '@mui/material';
 
 const drawerWidth = 240;
 
 const MenuCategories = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  // const categoriesMass = ['Сантехника', 'Керамогранит', 'Ламинат', 'Посуда', 'Ковролин'];
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
   const dispatch = useAppDispatch();
   const categories = useAppSelector(selectCategories);
-  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
+  const closeMenu = () => {
+    setMobileOpen(false);
+  };
+
   const drawer = (
     <>
-      {categories.map((item) => {
-        return (
-          <Button
-            key={item._id}
-            onClick={() => navigate('products/' + item._id)}
-            sx={{ backgroundColor: 'rgb(0,0,0)', m: 2 }}
-          >
-            {item.name}
-          </Button>
-        );
-      })}
+      <AccordionCategories categories={categories} close={closeMenu} />
     </>
   );
 
@@ -73,6 +66,11 @@ const MenuCategories = () => {
             },
           }}
         >
+          <Box sx={{ m: 0, background: 'rgba(166,143,143,0.38)', pt: 1.5, pb: 1.5 }}>
+            <Typography variant={'h6'} textAlign={'center'}>
+              Каталог товаров
+            </Typography>
+          </Box>
           {drawer}
         </Drawer>
         <Drawer
@@ -88,18 +86,29 @@ const MenuCategories = () => {
           }}
           open
         >
+          <Box sx={{ m: 0, background: 'rgba(166,143,143,0.38)', pt: 2, pb: 2 }}>
+            <Typography variant={'h5'} textAlign={'center'}>
+              Каталог товаров
+            </Typography>
+          </Box>
           {drawer}
         </Drawer>
       </Box>
-      <Box component="main" sx={{ flexGrow: 1, pl: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          edge="start"
-          onClick={handleDrawerToggle}
-          sx={{ mr: 2, display: { lg: 'none' } }}
-        >
-          <MenuIcon />
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          pl: 3,
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          background: 'rgba(166,143,143,0.38)',
+          display: { lg: 'none' },
+        }}
+      >
+        <IconButton color="inherit" aria-label="open drawer" edge="start" onClick={handleDrawerToggle} sx={{ mr: 2 }}>
+          <MenuIcon fontSize={'large'} />
+          <Typography variant={'h6'} textAlign={'center'} sx={{ ml: 1 }}>
+            Каталог товаров
+          </Typography>
         </IconButton>
       </Box>
     </Box>

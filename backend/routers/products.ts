@@ -1,6 +1,8 @@
 import express from 'express';
 import Product from '../models/Product';
 import mongoose from 'mongoose';
+import auth, { RequestWithUser } from '../middleware/auth';
+import permit from '../middleware/permit';
 
 const productRouter = express.Router();
 
@@ -47,6 +49,20 @@ productRouter.get('/:id', async (req, res, next) => {
   try {
     const productRes = await Product.findById(req.params.id);
     return res.send(productRes);
+  } catch (e) {
+    return next(e);
+  }
+});
+
+productRouter.get('/get/favorites', auth, permit('user'), async (req, res, next) => {
+  try {
+    const user = (req as RequestWithUser).user;
+    const favoriteProductsId = user.favorites;
+    const products = await Product.find({ _id: { $in: favoriteProductsId } });
+    if (!products) {
+      return res.send({ message: 'You do not have favorites Products' });
+    }
+    return res.json(products);
   } catch (e) {
     return next(e);
   }
